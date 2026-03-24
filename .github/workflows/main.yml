@@ -36,7 +36,6 @@ jobs:
     name: deploy to staging
     runs-on: ubuntu-22.04
     needs: test
-    # Запускаем только при push (не при pull_request)
     if: github.event_name == 'push'
     
     steps:
