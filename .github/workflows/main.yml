@@ -1,0 +1,55 @@
+name: CI/CD Workflow
+
+on:
+  push:
+    branches:
+    - main
+    - release/*
+  
+  # Запуск при pull_request в main
+  pull_request:
+    branches:
+    - main
+  
+  # Запуск по расписанию: с понедельника по пятницу в 2:00 UTC
+  schedule:
+  - cron: "0 2 * * 1-5"
+  
+  # Ручной запуск
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        node_version: ['18.x', '20.x']
+        os: [ubuntu-latest, windows-latest, macOS-latest]
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node_version }}
+    - run: npm install
+    - run: npm test
+
+  deploy:
+    name: deploy to staging
+    runs-on: ubuntu-22.04
+    needs: test
+    # Запускаем только при push (не при pull_request)
+    if: github.event_name == 'push'
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup Node
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20.x'
+    
+    - name: Install Dependencies
+      run: npm install
+    
+    - name: Deploy
+      run: npm run deploy
