@@ -10,21 +10,10 @@ import os
 from typing import List, Union, Dict, Any
 
 class DataProcessor:
-    """
-    Класс для обработки смешанных данных (int, str).
-    Поддерживает ввод, добавление, фильтрацию и вычисление статистики.
-    """
-
     def __init__(self):
-        """Инициализация пустого хранилища данных."""
         self.data: List[Union[int, str]] = []
 
     def input_data(self, interactive: bool = True, input_string: str = None) -> None:
-        """
-        Метод для ввода данных.
-        Если interactive=True, запрашивает ввод у пользователя.
-        Если передан input_string, парсит строку с разделителями.
-        """
         if interactive:
             print("Введите данные (целые числа или строки).")
             print("Для завершения ввода введите 'stop' или 'exit':")
@@ -41,7 +30,6 @@ class DataProcessor:
             print(f"Загружено {len(parts)} элементов из строки.")
 
     def _add_single_value(self, value: str) -> None:
-        """Вспомогательный метод: пытается преобразовать в int, иначе сохраняет как str."""
         try:
             int_val = int(value)
             self.data.append(int_val)
@@ -50,18 +38,12 @@ class DataProcessor:
                 self.data.append(value)
 
     def get_numbers(self) -> List[int]:
-        """Возвращает список только целых чисел."""
         return [item for item in self.data if isinstance(item, int)]
 
     def get_strings(self) -> List[str]:
-        """Возвращает список только строк."""
         return [item for item in self.data if isinstance(item, str)]
 
     def number_stats(self) -> Dict[str, float]:
-        """
-        Вычисляет статистику для целых чисел.
-        Возвращает словарь: {'count': int, 'sum': int, 'min': int, 'max': int, 'avg': float}
-        """
         numbers = self.get_numbers()
         if not numbers:
             return {'count': 0, 'sum': 0, 'min': None, 'max': None, 'avg': None}
@@ -74,11 +56,9 @@ class DataProcessor:
         }
 
     def filter_strings_by_length(self, min_len: int = 3) -> List[str]:
-        """Фильтрует строки по минимальной длине."""
         return [s for s in self.get_strings() if len(s) >= min_len]
 
     def display(self) -> None:
-        """Отображает текущие данные на экране."""
         print("\n--- Текущие данные ---")
         if not self.data:
             print("Данные отсутствуют.")
@@ -87,7 +67,6 @@ class DataProcessor:
             print(f"{i}. {item} (тип: {'int' if isinstance(item, int) else 'str'})")
 
     def save_to_file(self, filename: str = "data_export.json") -> None:
-        """Сохраняет данные в JSON файл."""
         # Для сохранения в JSON преобразуем объекты в сериализуемый формат
         serializable_data = []
         for item in self.data:
@@ -101,7 +80,6 @@ class DataProcessor:
         print(f"Данные сохранены в файл: {filename}")
 
     def load_from_file(self, filename: str = "data_export.json") -> None:
-        """Загружает данные из JSON файла."""
         if not os.path.exists(filename):
             print(f"Файл {filename} не найден.")
             return
@@ -119,7 +97,6 @@ class DataProcessor:
 
 
 def main():
-    """Главная функция для демонстрации работы модуля."""
     processor = DataProcessor()
 
     print("=" * 50)
