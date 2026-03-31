@@ -16,5 +16,5 @@ jobs:
     - uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node_version }}
-    - run: npm install
-    - run: npm test
+    - run: pip install unittest
+    - run: python -m unittest test.py -v
